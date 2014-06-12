@@ -115,6 +115,7 @@ namespace Ubiq2Tests.Graphics
         [TestMethod]
         public void TestShowMap()
         {
+            var pixels = new [] {new Pixel(), new Pixel(), new Pixel(), new Pixel()};
             var mapObject = new MapObject {Position = new MapPosition(0, 0)};
             var staticObject = new MapObject {Position = new MapPosition(1, 1)};
 
@@ -128,14 +129,28 @@ namespace Ubiq2Tests.Graphics
                 Window = new GameWindow {Width = 200, Height = 200},
                 TextureFileName = @"..\..\Images\textures.png",
                 DetermineScreenSizeInTiles = (SizeInPixels size) => new Vector2d(5, 5),
-                EndRedrawAction = (Graphic graphic) => graphic.Window.Close(),
+                EndRedrawAction = (Graphic graphic) =>
+                {
+                    pixels[0].ReadBuffer(18, 28);
+                    pixels[1].ReadBuffer(18, 35);
+                    pixels[2].ReadBuffer(59, 69);
+                    pixels[3].ReadBuffer(58, 76);
+                    graphic.Window.Close();
+                },
                 QuadList = map
             };
             graphicObject.Window.Run(1.0, 1.0);
 
+            var faceColor = new Pixel(0.9058824f, 0.7882353f, 0.6196079f);
+            var hairColor = new Pixel(0.627451f, 0.4196978f, 0.1215686f);
+            
+            Assert.AreEqual(faceColor, pixels[0]);
+            Assert.AreEqual(hairColor, pixels[1]);
+            Assert.AreEqual(faceColor, pixels[2]);
+            Assert.AreEqual(hairColor, pixels[3]);
         }
 
-        //[Ignore]
+        [Ignore]
         [TestMethod]
         public void MoveTestMoveWithKeyboard()
         {
