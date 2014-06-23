@@ -7,6 +7,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using Ubiq2.GameLogic;
 using Ubiq2.Graphics;
+using Keyboard = Ubiq2.Control.Keyboard;
 using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 
 namespace Ubiq2Tests.Graphics
@@ -150,7 +151,6 @@ namespace Ubiq2Tests.Graphics
             Assert.AreEqual(hairColor, pixels[3]);
         }
 
-        [Ignore]
         [TestMethod]
         public void MoveTestMoveWithKeyboard()
         {
@@ -161,7 +161,7 @@ namespace Ubiq2Tests.Graphics
                 Gl = new GLWrapper(),
                 Window = window,
                 TextureFileName = @"..\..\Images\textures.png",
-                DetermineScreenSizeInTiles = (SizeInPixels size) => new Vector2d(2, 2),
+                DetermineScreenSizeInTiles = (SizeInPixels size) => new Vector2d(10, 10),
                 QuadList = new List<Quad> {charQuad},
                 EndRedrawAction = (Graphic graphic) =>
                 {
@@ -169,7 +169,75 @@ namespace Ubiq2Tests.Graphics
                 }
             };
 
-            window.Keyboard.KeyDown += (sender, args) =>
+            // Det fungerar inte bra att enbart kontrollera tangenter vid UpdateFrame:
+            // Fungerar dåligt att ta "småsteg". Även ett mycket snabbt tryck (som inte
+            // fångas upp inom någon UpdateFrame) bör räknas som ett steg.
+
+            // Därför behöver man ha ett tangentbordsobjekt som kontrollerar när tangenter
+            // trycks ner och släpps upp.
+            
+            // Generera action om en tangent har tryckts ner eller är nedtryckt. Om en tangent
+            // inte längre är nedtryckt, återställ tangenten (avregistrera den som "har blivit
+            // nedtryckt").
+
+            // Det är ett objekt som skapas och har en koppling till window.Keyboard.
+            // Den registerar sig på KeyDown för att veta om tangenten har tryckts ner sedan
+            // förra återställningen.
+            // Den har metoder för att nollställa tangenter.
+            // Den har en metod för att meddela om en tangent är aktiv.
+
+            window.TargetUpdateFrequency = 1.0;
+
+            var keyboard = new Keyboard {InternalKeyboard = window.Keyboard};
+
+            window.UpdateFrame += (sender, args) =>
+            {
+                if (keyboard.Pressed(Key.Escape))
+                {
+                    graphicObject.Window.Close();
+                }
+                if (keyboard.Pressed(Key.Right))
+                {
+                    charQuad.Position = new MapPosition(charQuad.Position, new PositionChange { X = 1 });
+                }
+                if (keyboard.Pressed(Key.Left))
+                {
+                    charQuad.Position = new MapPosition(charQuad.Position, new PositionChange { X = -1 });
+                }
+                if (keyboard.Pressed(Key.Up))
+                {
+                    charQuad.Position = new MapPosition(charQuad.Position, new PositionChange { Y = 1 });
+                }
+                if (keyboard.Pressed(Key.Down))
+                {
+                    charQuad.Position = new MapPosition(charQuad.Position, new PositionChange { Y = -1 });
+                }
+
+                keyboard.ClearAllKeys();
+
+                /*if (window.Keyboard[Key.Escape])
+                {
+                    graphicObject.Window.Close();
+                }
+                if (window.Keyboard[Key.Right])
+                {
+                    charQuad.Position = new MapPosition(charQuad.Position, new PositionChange { X = 1 });
+                }
+                if (window.Keyboard[Key.Left])
+                {
+                    charQuad.Position = new MapPosition(charQuad.Position, new PositionChange { X = -1 });
+                }
+                if (window.Keyboard[Key.Up])
+                {
+                    charQuad.Position = new MapPosition(charQuad.Position, new PositionChange { Y = 1 });
+                }
+                if (window.Keyboard[Key.Down])
+                {
+                    charQuad.Position = new MapPosition(charQuad.Position, new PositionChange { Y = -1 });
+                }*/
+            };
+
+            /*window.Keyboard.KeyDown += (sender, args) =>
             {
                 if (window.Keyboard[Key.Escape])
                 {
@@ -191,9 +259,9 @@ namespace Ubiq2Tests.Graphics
                 {
                     charQuad.Position = new MapPosition(charQuad.Position, new PositionChange {Y = -1});
                 }
-            };
+            };*/
 
-            window.Run();
+            window.Run(5.0);
         }
     }
 }
