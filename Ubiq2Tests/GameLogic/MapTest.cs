@@ -1,11 +1,8 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Ubiq2;
 using Ubiq2.GameLogic;
 
-namespace Ubiq2Tests
+namespace Ubiq2Tests.GameLogic
 {
     [TestClass]
     public class MapTest
@@ -44,7 +41,7 @@ namespace Ubiq2Tests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void TestAddNullObject()
+        public void TestAddNullObjectThrowsException()
         {
             var map = new Map();
             map.AddObject(null);

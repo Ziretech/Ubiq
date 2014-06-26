@@ -32,6 +32,7 @@ namespace Ubiq2Tests.Graphics
         [ExpectedException(typeof(NullReferenceException))]
         public void TestCreateSizeFromNull()
         {
+// ReSharper disable once ObjectCreationAsStatement
             new Size(null);
         }
 
@@ -66,28 +67,32 @@ namespace Ubiq2Tests.Graphics
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TestZeroWidthIllegal()
         {
-            var size = new Size(0, 3);
+// ReSharper disable once ObjectCreationAsStatement
+            new Size(0, 3);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TestNegative2WidthIllegal()
         {
-            var size = new Size(-2, 6);
+// ReSharper disable once ObjectCreationAsStatement
+            new Size(-2, 6);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TestZeroHeightIllegal()
         {
-            var size = new Size(3, 0);
+// ReSharper disable once ObjectCreationAsStatement
+            new Size(3, 0);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TestNegative5HeightIllegal()
         {
-            var size = new Size(1, -5);
+// ReSharper disable once ObjectCreationAsStatement
+            new Size(1, -5);
         }
     }
 }

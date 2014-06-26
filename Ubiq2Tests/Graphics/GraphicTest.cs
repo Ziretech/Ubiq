@@ -1,13 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
-using OpenTK.Input;
 using Ubiq2.GameLogic;
 using Ubiq2.Graphics;
-using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 
 namespace Ubiq2Tests.Graphics
 {
@@ -23,9 +18,9 @@ namespace Ubiq2Tests.Graphics
                 Gl = new GLWrapper(), 
                 Window = new GameWindow { Width = 200, Height = 200 }, 
                 TextureFileName = @"..\..\Images\textures.png",
-                DetermineScreenSizeInTiles = (SizeInPixels size) => new Vector2d(2, 2),
+                DetermineScreenSizeInTiles = size => new Vector2d(2, 2),
                 QuadList = new List<Quad> { new Quad{FragmentPositionY = 3.0}},
-                EndRedrawAction = (Graphic graphic) =>
+                EndRedrawAction = graphic =>
                 {
                     pixels[0].ReadBuffer(47, 70);
                     pixels[1].ReadBuffer(46, 89);
@@ -55,8 +50,8 @@ namespace Ubiq2Tests.Graphics
                 Gl = new GLWrapper(),
                 Window = new GameWindow { Width = 200, Height = 200 },
                 TextureFileName = @"..\..\Images\textures.png",
-                DetermineScreenSizeInTiles = (SizeInPixels size) => new Vector2d(2, 2),
-                EndRedrawAction = (Graphic graphic) =>
+                DetermineScreenSizeInTiles = size => new Vector2d(2, 2),
+                EndRedrawAction = graphic =>
                 {
                     pixels[0].ReadBuffer(150, 172);
                     pixels[1].ReadBuffer(145, 190);
@@ -87,8 +82,8 @@ namespace Ubiq2Tests.Graphics
                 Gl = new GLWrapper(),
                 Window = new GameWindow { Width = 200, Height = 200 },
                 TextureFileName = @"..\..\Images\textures.png",
-                DetermineScreenSizeInTiles = (SizeInPixels size) => new Vector2d(2, 2),
-                EndRedrawAction = (Graphic graphic) =>
+                DetermineScreenSizeInTiles = size => new Vector2d(2, 2),
+                EndRedrawAction = graphic =>
                 {
                     pixels[0].ReadBuffer(47, 172);
                     pixels[1].ReadBuffer(47, 190);
@@ -128,8 +123,8 @@ namespace Ubiq2Tests.Graphics
                 Gl = new GLWrapper(),
                 Window = new GameWindow {Width = 200, Height = 200},
                 TextureFileName = @"..\..\Images\textures.png",
-                DetermineScreenSizeInTiles = (SizeInPixels size) => new Vector2d(5, 5),
-                EndRedrawAction = (Graphic graphic) =>
+                DetermineScreenSizeInTiles = size => new Vector2d(5, 5),
+                EndRedrawAction = graphic =>
                 {
                     pixels[0].ReadBuffer(18, 28);
                     pixels[1].ReadBuffer(18, 35);
@@ -150,66 +145,68 @@ namespace Ubiq2Tests.Graphics
             Assert.AreEqual(hairColor, pixels[3]);
         }
 
-        [TestMethod]
-        public void MoveTestMoveWithKeyboard()
-        {
-            var window = new GameWindow {Width = 200, Height = 200};
-            var charQuad = new Quad {FragmentPositionY = 3.0};
+        // Detta test testar för mycket och ska inte finnas här. Tangentbord har inte med grafiken att göra.
+        //
+        //[TestMethod]
+        //public void MoveTestMoveWithKeyboard()
+        //{
+        //    var window = new GameWindow {Width = 200, Height = 200};
+        //    var charQuad = new Quad {FragmentPositionY = 3.0};
 
-            var quadList = new List<Quad>();
-            for (var x = 0; x < 10; x ++)
-            {
-                for (var y = 0; y < 10; y ++)
-                {
-                    quadList.Add(new Quad { FragmentPositionX = 1.0, FragmentPositionY = 3.0, Position = new MapPosition(x, y)});
-                }
-            }
-            quadList.Add(new Quad { FragmentPositionX = 2.0, FragmentPositionY = 3.0, Position = new MapPosition(3, 2)});
-            quadList.Add(new Quad { FragmentPositionX = 2.0, FragmentPositionY = 3.0, Position = new MapPosition(4, 7) });
-            quadList.Add(new Quad { FragmentPositionX = 2.0, FragmentPositionY = 3.0, Position = new MapPosition(2, 5) });
+        //    var quadList = new List<Quad>();
+        //    for (var x = 0; x < 10; x ++)
+        //    {
+        //        for (var y = 0; y < 10; y ++)
+        //        {
+        //            quadList.Add(new Quad { FragmentPositionX = 1.0, FragmentPositionY = 3.0, Position = new MapPosition(x, y)});
+        //        }
+        //    }
+        //    quadList.Add(new Quad { FragmentPositionX = 2.0, FragmentPositionY = 3.0, Position = new MapPosition(3, 2)});
+        //    quadList.Add(new Quad { FragmentPositionX = 2.0, FragmentPositionY = 3.0, Position = new MapPosition(4, 7) });
+        //    quadList.Add(new Quad { FragmentPositionX = 2.0, FragmentPositionY = 3.0, Position = new MapPosition(2, 5) });
 
-            quadList.Add(charQuad);
+        //    quadList.Add(charQuad);
 
-            var graphicObject = new Graphic
-            {
-                Gl = new GLWrapper(),
-                Window = window,
-                TextureFileName = @"..\..\Images\textures.png",
-                DetermineScreenSizeInTiles = (SizeInPixels size) => new Vector2d(10, 10),
-                QuadList = quadList,
-                EndRedrawAction = (Graphic graphic) =>
-                {
-                    //graphic.Window.Close();
-                }
-            };
+        //    var graphicObject = new Graphic
+        //    {
+        //        Gl = new GLWrapper(),
+        //        Window = window,
+        //        TextureFileName = @"..\..\Images\textures.png",
+        //        DetermineScreenSizeInTiles = (SizeInPixels size) => new Vector2d(10, 10),
+        //        QuadList = quadList,
+        //        EndRedrawAction = (Graphic graphic) =>
+        //        {
+        //            //graphic.Window.Close();
+        //        }
+        //    };
 
-            window.Keyboard.KeyDown += (sender, args) =>
-            {
-                switch (args.Key)
-                {
-                    case Key.Escape:
-                        graphicObject.Window.Close();
-                        break;
+        //    window.Keyboard.KeyDown += (sender, args) =>
+        //    {
+        //        switch (args.Key)
+        //        {
+        //            case Key.Escape:
+        //                graphicObject.Window.Close();
+        //                break;
 
-                    case Key.Right:
-                        charQuad.Position = new MapPosition(charQuad.Position, PositionChange.CreateRight());
-                        break;
+        //            case Key.Right:
+        //                charQuad.Position = new MapPosition(charQuad.Position, PositionChange.CreateRight());
+        //                break;
 
-                    case Key.Left:
-                        charQuad.Position = new MapPosition(charQuad.Position, PositionChange.CreateLeft());
-                        break;
+        //            case Key.Left:
+        //                charQuad.Position = new MapPosition(charQuad.Position, PositionChange.CreateLeft());
+        //                break;
 
-                    case Key.Up:
-                        charQuad.Position = new MapPosition(charQuad.Position, PositionChange.CreateUp());
-                        break;
+        //            case Key.Up:
+        //                charQuad.Position = new MapPosition(charQuad.Position, PositionChange.CreateUp());
+        //                break;
 
-                    case Key.Down:
-                        charQuad.Position = new MapPosition(charQuad.Position, PositionChange.CreateDown());
-                        break;
-                }
-            };
+        //            case Key.Down:
+        //                charQuad.Position = new MapPosition(charQuad.Position, PositionChange.CreateDown());
+        //                break;
+        //        }
+        //    };
 
-            window.Run(5.0);
-        }
+        //    window.Run(5.0);
+        //}
     }
 }

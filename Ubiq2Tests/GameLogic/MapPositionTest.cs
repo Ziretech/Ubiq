@@ -34,7 +34,8 @@ namespace Ubiq2Tests.GameLogic
         [ExpectedException(typeof(NullReferenceException))]
         public void TestCreatePositionFromNull()
         {
-            var position = new MapPosition(null);
+            // ReSharper disable once ObjectCreationAsStatement
+            new MapPosition(null);
         }
 
         [TestMethod]

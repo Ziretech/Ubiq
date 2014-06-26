@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using OpenTK;
+﻿using OpenTK;
 using OpenTK.Input;
 using Ubiq2.GameLogic;
 using Ubiq2.Graphics;
@@ -53,7 +52,7 @@ namespace Ubiq2
                 Gl = new GLWrapper(),
                 Window = gameWindow,
                 TextureFileName = @"..\..\Images\textures.png",
-                DetermineScreenSizeInTiles = (SizeInPixels size) => new Vector2d(16, 16),
+                DetermineScreenSizeInTiles = size => new Vector2d(16, 16),
                 QuadList = map
             };
 
