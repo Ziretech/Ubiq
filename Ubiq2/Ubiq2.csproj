@@ -37,7 +37,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
-    <Compile Include="Control\Keyboard.cs" />
     <Compile Include="GameLogic\MapObject.cs" />
     <Compile Include="GameLogic\MapObjectEnumerator.cs" />
     <Compile Include="GameLogic\Teleporter.cs" />

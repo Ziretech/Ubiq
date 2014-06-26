@@ -7,7 +7,6 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using Ubiq2.GameLogic;
 using Ubiq2.Graphics;
-using Keyboard = Ubiq2.Control.Keyboard;
 using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 
 namespace Ubiq2Tests.Graphics
@@ -156,110 +155,59 @@ namespace Ubiq2Tests.Graphics
         {
             var window = new GameWindow {Width = 200, Height = 200};
             var charQuad = new Quad {FragmentPositionY = 3.0};
+
+            var quadList = new List<Quad>();
+            for (var x = 0; x < 10; x ++)
+            {
+                for (var y = 0; y < 10; y ++)
+                {
+                    quadList.Add(new Quad { FragmentPositionX = 1.0, FragmentPositionY = 3.0, Position = new MapPosition(x, y)});
+                }
+            }
+            quadList.Add(new Quad { FragmentPositionX = 2.0, FragmentPositionY = 3.0, Position = new MapPosition(3, 2)});
+            quadList.Add(new Quad { FragmentPositionX = 2.0, FragmentPositionY = 3.0, Position = new MapPosition(4, 7) });
+            quadList.Add(new Quad { FragmentPositionX = 2.0, FragmentPositionY = 3.0, Position = new MapPosition(2, 5) });
+
+            quadList.Add(charQuad);
+
             var graphicObject = new Graphic
             {
                 Gl = new GLWrapper(),
                 Window = window,
                 TextureFileName = @"..\..\Images\textures.png",
                 DetermineScreenSizeInTiles = (SizeInPixels size) => new Vector2d(10, 10),
-                QuadList = new List<Quad> {charQuad},
+                QuadList = quadList,
                 EndRedrawAction = (Graphic graphic) =>
                 {
                     //graphic.Window.Close();
                 }
             };
 
-            // Det fungerar inte bra att enbart kontrollera tangenter vid UpdateFrame:
-            // Fungerar dåligt att ta "småsteg". Även ett mycket snabbt tryck (som inte
-            // fångas upp inom någon UpdateFrame) bör räknas som ett steg.
-
-            // Därför behöver man ha ett tangentbordsobjekt som kontrollerar när tangenter
-            // trycks ner och släpps upp.
-            
-            // Generera action om en tangent har tryckts ner eller är nedtryckt. Om en tangent
-            // inte längre är nedtryckt, återställ tangenten (avregistrera den som "har blivit
-            // nedtryckt").
-
-            // Det är ett objekt som skapas och har en koppling till window.Keyboard.
-            // Den registerar sig på KeyDown för att veta om tangenten har tryckts ner sedan
-            // förra återställningen.
-            // Den har metoder för att nollställa tangenter.
-            // Den har en metod för att meddela om en tangent är aktiv.
-
-            window.TargetUpdateFrequency = 1.0;
-
-            var keyboard = new Keyboard {InternalKeyboard = window.Keyboard};
-
-            window.UpdateFrame += (sender, args) =>
+            window.Keyboard.KeyDown += (sender, args) =>
             {
-                if (keyboard.Pressed(Key.Escape))
+                switch (args.Key)
                 {
-                    graphicObject.Window.Close();
-                }
-                if (keyboard.Pressed(Key.Right))
-                {
-                    charQuad.Position = new MapPosition(charQuad.Position, new PositionChange { X = 1 });
-                }
-                if (keyboard.Pressed(Key.Left))
-                {
-                    charQuad.Position = new MapPosition(charQuad.Position, new PositionChange { X = -1 });
-                }
-                if (keyboard.Pressed(Key.Up))
-                {
-                    charQuad.Position = new MapPosition(charQuad.Position, new PositionChange { Y = 1 });
-                }
-                if (keyboard.Pressed(Key.Down))
-                {
-                    charQuad.Position = new MapPosition(charQuad.Position, new PositionChange { Y = -1 });
-                }
+                    case Key.Escape:
+                        graphicObject.Window.Close();
+                        break;
 
-                keyboard.ClearAllKeys();
+                    case Key.Right:
+                        charQuad.Position = new MapPosition(charQuad.Position, PositionChange.CreateRight());
+                        break;
 
-                /*if (window.Keyboard[Key.Escape])
-                {
-                    graphicObject.Window.Close();
+                    case Key.Left:
+                        charQuad.Position = new MapPosition(charQuad.Position, PositionChange.CreateLeft());
+                        break;
+
+                    case Key.Up:
+                        charQuad.Position = new MapPosition(charQuad.Position, PositionChange.CreateUp());
+                        break;
+
+                    case Key.Down:
+                        charQuad.Position = new MapPosition(charQuad.Position, PositionChange.CreateDown());
+                        break;
                 }
-                if (window.Keyboard[Key.Right])
-                {
-                    charQuad.Position = new MapPosition(charQuad.Position, new PositionChange { X = 1 });
-                }
-                if (window.Keyboard[Key.Left])
-                {
-                    charQuad.Position = new MapPosition(charQuad.Position, new PositionChange { X = -1 });
-                }
-                if (window.Keyboard[Key.Up])
-                {
-                    charQuad.Position = new MapPosition(charQuad.Position, new PositionChange { Y = 1 });
-                }
-                if (window.Keyboard[Key.Down])
-                {
-                    charQuad.Position = new MapPosition(charQuad.Position, new PositionChange { Y = -1 });
-                }*/
             };
-
-            /*window.Keyboard.KeyDown += (sender, args) =>
-            {
-                if (window.Keyboard[Key.Escape])
-                {
-                    graphicObject.Window.Close();
-                }
-                if (window.Keyboard[Key.Right])
-                {
-                    charQuad.Position = new MapPosition(charQuad.Position, new PositionChange {X = 1});
-                }
-                if (window.Keyboard[Key.Left])
-                {
-                    charQuad.Position = new MapPosition(charQuad.Position, new PositionChange {X = -1});
-                }
-                if (window.Keyboard[Key.Up])
-                {
-                    charQuad.Position = new MapPosition(charQuad.Position, new PositionChange {Y = 1});
-                }
-                if (window.Keyboard[Key.Down])
-                {
-                    charQuad.Position = new MapPosition(charQuad.Position, new PositionChange {Y = -1});
-                }
-            };*/
 
             window.Run(5.0);
         }

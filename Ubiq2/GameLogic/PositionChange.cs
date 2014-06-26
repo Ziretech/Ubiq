@@ -19,5 +19,25 @@
         {
             return X ^ Y;
         }
+
+        public static PositionChange CreateLeft()
+        {
+            return new PositionChange {X = -1};
+        }
+
+        public static PositionChange CreateRight()
+        {
+            return new PositionChange {X = 1};
+        }
+
+        public static PositionChange CreateUp()
+        {
+            return new PositionChange { Y = 1 };
+        }
+
+        public static PositionChange CreateDown()
+        {
+            return new PositionChange { Y = -1 };
+        }
     }
 }

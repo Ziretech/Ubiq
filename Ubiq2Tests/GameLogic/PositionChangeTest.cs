@@ -41,5 +41,42 @@ namespace Ubiq2Tests.GameLogic
             Assert.AreNotEqual(change, otherYChange);
 
         }
+
+        [TestMethod]
+        public void TestHashCode()
+        {
+            var baseChange = new PositionChange {X = 3, Y = 7};
+            var sameChange = new PositionChange {X = 3, Y = 7};
+            var differInXChange = new PositionChange {X = 2, Y = 7};
+            var differInYChange = new PositionChange {X = 3, Y = 8};
+
+            Assert.AreEqual(baseChange.GetHashCode(), sameChange.GetHashCode());
+            Assert.AreNotEqual(baseChange.GetHashCode(), differInXChange.GetHashCode());
+            Assert.AreNotEqual(baseChange.GetHashCode(), differInYChange.GetHashCode());
+        }
+
+        [TestMethod]
+        public void TestCreateLeft()
+        {
+            Assert.AreEqual(new PositionChange {X = -1}, PositionChange.CreateLeft());
+        }
+
+        [TestMethod]
+        public void TestCreateRight()
+        {
+            Assert.AreEqual(new PositionChange { X = 1 }, PositionChange.CreateRight());
+        }
+
+        [TestMethod]
+        public void TestCreateDown()
+        {
+            Assert.AreEqual(new PositionChange { Y = -1 }, PositionChange.CreateDown());
+        }
+
+        [TestMethod]
+        public void TestCreateUp()
+        {
+            Assert.AreEqual(new PositionChange { Y = 1 }, PositionChange.CreateUp());
+        }
     }
 }

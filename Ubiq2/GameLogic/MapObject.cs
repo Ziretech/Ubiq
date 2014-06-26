@@ -7,6 +7,21 @@ namespace Ubiq2.GameLogic
     public class MapObject : IDrawable
     {
         private Quad _quad;
+
+        public Quad Quad
+        {
+            get { return _quad; }
+            set
+            {
+                MapPosition oldPosition = Position;
+                _quad = value;
+                if (oldPosition != null && _quad != null)
+                {
+                    _quad.Position = new MapPosition(oldPosition);
+                }
+            }
+        }
+
         private MapPosition _position;
         public MapPosition Position
         {
@@ -14,10 +29,9 @@ namespace Ubiq2.GameLogic
             set
             {
                 _position = value;
-                if (_position != null && _quad != null)
+                if (_position != null && Quad != null)
                 {
-                    _quad.Position = _position;
-
+                    Quad.Position = _position;
                 }
             }
         }
@@ -27,12 +41,12 @@ namespace Ubiq2.GameLogic
         {
             Blocking = true;
             Position = new MapPosition(0, 0);
-            _quad = new Quad { FragmentPositionY = 3.0 };
+            Quad = new Quad { FragmentPositionY = 3.0 };
         }
 
         public Quad GetQuad()
         {
-            return _quad;
+            return Quad;
         }
     }
 }

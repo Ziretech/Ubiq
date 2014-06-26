@@ -53,7 +53,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Control\KeyboardTest.cs" />
     <Compile Include="GameLogic\MapObjectTest.cs" />
     <Compile Include="GameLogic\MapPositionTest.cs" />
     <Compile Include="GameLogic\MapTest.cs" />
